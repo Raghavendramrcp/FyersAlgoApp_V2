@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %} <title> Upload or Update Symbols </title> {% endblock title %}
+
+
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+
+
+<div class="container">
+    <div class="row mx-5">
+        <div class="col-6  rounded border border-secondary" style="padding:5%">
+            <h4> Currency Upload </h4>
+            <form action="{% url 'currency_update' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+        <div class="col-6 rounded border border-secondary" style="padding:5%">
+            <h4> Currency Delete </h4>
+            <form action="{% url 'currency_delete' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div class="row mx-5">
+        <div class="col-6 rounded border border-secondary" style="padding:5%">
+            <h4> MCX Upload </h4>
+            <form action="{% url 'mcx_update' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+        <div class="col-6 rounded border border-secondary" style="padding:5%">
+            <h4> MCX Delete </h4>
+            <form action="{% url 'mcx_delete' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div class="row mx-5">
+        <div class="col-6 rounded border border-secondary" style="padding:5%">
+            <h4> Equity Upload </h4>
+            <form action="{% url 'equity_update' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+        <div class="col-6 rounded border border-secondary" style="padding:5%">
+            <h4> Equity Delete </h4>
+            <form action="{% url 'equity_delete' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% else %}
+
+
+Login
+
+
+{% endif %}
+
+
+{% endblock content %}
