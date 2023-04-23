@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Generate Access Token</title> {% endblock title %} 
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home/accesstoken.css' %}">
+{% endblock css %}
+
+{% block content %} 
+
+{% if user.is_authenticated %}
+
+<div class="container">
+  <div class="row px-5 py-5">
+    <div class="col-6 rounded border border-secondary px-5">
+      <form action="" method="POST">
+        {% csrf_token %}
+        <h3>Generate Access Token - <a href="{{ response }}">Here</a></h3>
+        {{ access_form.as_p }}
+        <input
+          class="btn btn-primary"
+          type="submit"
+          value="Generate Access Token"
+        />
+      </form>
+    </div>
+    <div class="col-6 rounded border border-secondary px-5">
+      <form action="{% url 'delete_auth_code' user.id %}" method="POST">
+        {% csrf_token %}
+        <h3>Delete the Access Token</h3>
+        <input
+          class="btn btn-primary"
+          type="submit"
+          value="Delete Access Token"
+        />
+      </form>
+    </div>
+  </div>
+  <div class="row"></div>
+</div>
+
+{% else %} You need to Login {% endif %} 
+
+{% endblock content %}
