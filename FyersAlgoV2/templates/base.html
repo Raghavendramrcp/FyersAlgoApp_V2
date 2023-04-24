@@ -16,6 +16,7 @@
       integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
       crossorigin="anonymous"
     />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     {% block css %}{% endblock css %}
   </head>
 
@@ -65,7 +66,7 @@
                   class="dropdown-menu"
                   aria-labelledby="navbarDropdownMenuLink"
                 >
-                  <li><a class="dropdown-item" href="#">Martingale</a></li>
+                  <li><a class="dropdown-item" href="{% url 'marrtingale_stocklist' user.id %}">Martingale Stocklist</a></li>
                 </ul>
               </li>
             </ul>

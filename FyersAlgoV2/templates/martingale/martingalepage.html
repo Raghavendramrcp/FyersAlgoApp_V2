@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+
+{% block title %}  <title> Equity Martingale Execution </title>  {% endblock title %}
+
+
+{% block content %}
+
+<div class="row container-fluid" style="margin:0%;padding:1%">
+
+    <div class="row" style="padding:1%">
+        <div class="col-xl-6 rounded border border-secondary">
+            <div class="row mb-3">
+                <div class="row container-fluid" style="padding:1%;">
+                    <label for="{{ ticker.symbol_ticker }}"> <strong> {{ ticker.symbol_ticker }} </strong> </label>
+                    <div class="container">
+                        <input type="text" name="{{ ticker.symbol_ticker }}" id="{{ ticker.symbol_ticker }}" class="quote_price form-control">
+                    </div>
+                    <small> Last Traded Price </small>
+                </div>
+            </div>
+            <div class="row">
+                <h6> Margin Required:  <span> <input type="text" name="marginRequired" id="marginRequired" class="marginRequired"> </span> </h6> 
+            </div>
+        </div>
+        <div class="col-xl-6  rounded border border-secondary">
+            <br>
+            <div class="row container-fluid">
+                
+                <form action="{% url 'equity_place_orders' user.id ticker.symbol_ticker %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3 row">
+                      <label for="initial_upper_limit_order" class="col-sm-4 col-form-label">Initial Upper Limit Order:</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="initial_upper_limit_order" class="form-control initial_upper_limit_order">
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="initial_lower_limit_order" class="col-sm-4 col-form-label">Initial Lower Limit Order:</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="initial_lower_limit_order" class="form-control initial_lower_limit_order">
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="target_upper_limit_order" class="col-sm-4 col-form-label">Target Upper Limit Order:</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="target_upper_limit_order" class="form-control target_upper_limit_order">
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="target_lower_limit_order" class="col-sm-4 col-form-label">Target Lower Limit Order:</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="target_lower_limit_order" class="form-control target_lower_limit_order">
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="quantity" class="col-sm-4 col-form-label">Quantity:</label>
+                      <div class="col-sm-8">
+                        <input type="text" name="quantity" value="" id="quantity" class="form-control quantityToTrade">
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <div class="col-sm-12 text-center">
+                        <input type="submit" class="btn btn-primary" value="Place Orders">
+                      </div>
+                    </div> 
+                  </form>                  
+            </div> 
+        </div>
+    </div>
+    <div class="row" style="padding:1%">
+        <div class="col-xl rounded border border-secondary">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> S.No </th>
+                        {% if orders %}
+                            <th> {{ 'id'|upper }} </th>
+                            <th> {{ 'symbol'|upper }} </th>
+                            <th> {{ 'qty'|upper }} </th>
+                            <th> {{ 'limitPrice'|upper }} </th>
+                            <th> {{ 'stopPrice'|upper }} </th>
+                            <th> {{ 'status'|upper }} </th>
+                            <th> Modify/Cancel Orders </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <th>{{ forloop.counter }}</th>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.symbol }}</td>
+                            <td>{{ order.qty }}</td>
+                            <td>{{ order.limitPrice }}</td>
+                            <td>{{ order.stopPrice }}</td>
+                            {% if order.status == 1 %}
+                                <td>Cancelled</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-danger" type="button" value="Cancelled" disabled> </td>
+                            {% elif order.status == 2 %}
+                                <td>Traded / Filled</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-success" type="button" value="Completed" disabled> </td>
+                            {% elif order.status == 3 %}
+                                <td>(Not used currently)</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-warning" type="button" value="Not Applicable" disabled> </td>
+                            {% elif order.status == 4 %}
+                                <td>Transit</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-warning" type="button" value="Transit"> </td>
+                            {% elif order.status == 5 %}
+                                <td>Rejected</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-danger" type="button" value="Rejected" disabled> </td>
+                            {% elif order.status == 6 %}
+                                <td>Pending</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-primary" type="button" value="Modify"> </td>
+                            {% elif order.status == 7 %}
+                                <td>Expired</td>
+                                <td> <input name="input-{{ order.id }}" id="button-{{ order.id }}" class="btn btn-warning" type="button" value="Expired" disabled> </td>
+                            {% else %}
+                                <td> No Status </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+function get_equity_quotes() {
+    $.ajax({
+        type: "GET",
+        url: "{% url 'price_quote' user.id ticker.symbol_ticker %}",
+        success: function (data) {
+            console.log(data);
+            
+            let quotePrice = data;
+            let tick_size = {{ ticker.tick_size }}
+            
+            
+
+            $(".quote_price").empty().val(data);
+            
+            let upper_initial_limit = Math.round((((quotePrice*0.0025)+quotePrice)/tick_size))*tick_size
+            $('.initial_upper_limit_order').val(upper_initial_limit.toFixed(2));
+            let upper_target_limit = Math.round((((quotePrice*0.0075)+quotePrice)/tick_size))*tick_size
+            $('.target_upper_limit_order').val(upper_target_limit.toFixed(2));
+            let lower_initial_limit = Math.round(((quotePrice-(quotePrice*0.0025))/tick_size))*tick_size
+            $('.initial_lower_limit_order').val(lower_initial_limit.toFixed(2));
+            let lower_target_limit = Math.round(((quotePrice-(quotePrice*0.0075))/tick_size))*tick_size
+            $('.target_lower_limit_order').val(lower_target_limit.toFixed(2));
+
+            let marginRequired = (quotePrice/5).toFixed(2)
+            
+            let fund_available = 10000
+
+            let quantity_to_be_traded = Math.floor(((fund_available)/2) / marginRequired)
+            $('.quantityToTrade').val(quantity_to_be_traded)
+            $('.marginRequired').val(marginRequired)
+
+            
+
+
+
+        }
+
+    });
+}
+
+
+$(document).ready(function() {
+    get_equity_quotes();
+    setInterval(get_equity_quotes, 300000)
+});
+
+
+</script>
+
+
+
+
+
+
+
+{% endblock content %}

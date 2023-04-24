@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.contrib.auth.models import User
+
 # Create your models here.
 
 
@@ -11,7 +12,9 @@ class Fyers_Auth_Inputs(models.Model):
     client_id = models.CharField(max_length=50, null=True, blank=True)
     secret_id = models.CharField(max_length=50, null=True, blank=True)
     redirect_url = models.CharField(
-        max_length=100, default="https://trade.fyers.in/api-login/redirect-uri/index.html")
+        max_length=100,
+        default="https://trade.fyers.in/api-login/redirect-uri/index.html",
+    )
 
     def __str__(self):
         return self.client_id
@@ -73,6 +76,7 @@ class MCXSymbol(models.Model):
         return f"{self.underlying_scrip_code}-{self.symbol_details}"
 
 
+
 class EquitySymbol(models.Model):
     fytoken = models.CharField(max_length=255, unique=True)
     symbol_details = models.CharField(max_length=255)
@@ -92,6 +96,10 @@ class EquitySymbol(models.Model):
     strike_price = models.FloatField()
     option_type = models.CharField(max_length=255)
     exchange_token = models.CharField(max_length=255)
+    
 
     def __str__(self):
         return f"{self.underlying_scrip_code}-{self.symbol_details}"
+
+
+

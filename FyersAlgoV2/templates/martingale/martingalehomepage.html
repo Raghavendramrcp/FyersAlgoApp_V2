@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block title %} <title>Equity Home Page</title> {% endblock title %} 
+
+{% block content %}
+
+<div class="row container-fluid">
+  <div class="row">
+    <h2>Welcome to the Martingale Strategy</h2>
+    <h3>User Profile</h3>
+    <p>Client ID: {{ user_profile }}</p>
+    <p>Funds Available: <strong> {{ funds }} </strong></p>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-6">
+      <div class="row" style="padding: 1%">
+        <div class="card border-secondary">
+          <div class="card-body">
+            <h4 class="card-title">Martingale Hedging Strategy</h4>
+            <p class="card-text">Click below to access the strategy</p>
+            <a href="{% url 'marrtingale_stocklist' user.id %}" class="btn btn-primary"> Go </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
