@@ -69,6 +69,7 @@
         </div>
     </div>
     <div class="row" style="padding:1%">
+        {% comment %} All the table contents to be converted to Input fields {% endcomment %}
         <div class="col-xl rounded border border-secondary">
             <table class="table">
                 <thead>
@@ -155,14 +156,13 @@ function get_equity_quotes() {
 
             let marginRequired = (quotePrice/5).toFixed(2)
             
-            let fund_available = 10000
+            let fund_available = {{ funds_available }};
 
             let quantity_to_be_traded = Math.floor(((fund_available)/2) / marginRequired)
-            $('.quantityToTrade').val(quantity_to_be_traded)
-            $('.marginRequired').val(marginRequired)
 
             
-
+            $('.quantityToTrade').val(quantity_to_be_traded)
+            $('.marginRequired').val(marginRequired)
 
 
         }
